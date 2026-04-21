@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programming Languages – Topics 12 & 13</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --accent: #f5a623;
+    --accent2: #4fc3f7;
+    --accent3: #81c784;
+    --accent4: #e57373;
+    --text: #e8eaf0;
+    --muted: #7b8099;
+    --border: #2e3250;
+    --c-c: #4fc3f7;
+    --c-cpp: #e57373;
+    --c-java: #f5a623;
+    --c-js: #fff176;
+    --c-py: #81c784;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 50%, #0d1520 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 48px 32px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(245,166,35,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(79,195,247,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  header .tag {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.4);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── NAV PILLS ── */
+  .nav-pills {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 24px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-pills a {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .nav-pills a:hover { color: var(--accent); border-color: var(--accent); background: rgba(245,166,35,0.08); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── SECTION HEADERS ── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 56px 0 28px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(245,166,35,0.12);
+    border: 1px solid rgba(245,166,35,0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .section-head h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .divider { flex: 1; height: 1px; background: var(--border); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 12px;
+  }
+  .card p, .card li { color: #c5c8d6; font-size: 15px; line-height: 1.75; }
+  .card ul { padding-left: 20px; }
+  .card li { margin-bottom: 6px; }
+  .card li strong { color: var(--text); }
+
+  /* ── LANGUAGE STRIP ── */
+  .lang-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .lang-badge {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+  }
+  .lang-badge:hover { transform: translateY(-3px); }
+  .lang-badge .dot { width: 10px; height: 10px; border-radius: 50%; margin: 0 auto 8px; }
+  .lang-badge .name { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; }
+  .lang-badge .desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-wrap { overflow-x: auto; margin-bottom: 24px; border-radius: 10px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 600px;
+  }
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  th:first-child { color: var(--muted); text-align: left; }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  td:first-child { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── CODE BLOCK ── */
+  .code-tabs { margin-bottom: 20px; }
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 18px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+  .code-panel { display: none; }
+  .code-panel.active { display: block; }
+  pre {
+    background: #0a0c12;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 20px 22px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .kw { color: #e57373; }
+  .ty { color: #4fc3f7; }
+  .fn { color: #f5a623; }
+  .st { color: #81c784; }
+  .cm { color: #4a5070; font-style: italic; }
+  .nu { color: #ce93d8; }
+
+  /* ── LAB CARDS ── */
+  .lab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent3);
+    border-radius: 0 12px 12px 0;
+    padding: 24px 28px;
+    margin-bottom: 22px;
+  }
+  .lab-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .lab-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(129,199,132,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(129,199,132,0.3);
+    padding: 3px 9px;
+    border-radius: 4px;
+  }
+  .lab h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .lab .objective {
+    font-size: 13px;
+    color: var(--accent3);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .lab ol { padding-left: 22px; }
+  .lab li { font-size: 14px; color: #c5c8d6; margin-bottom: 8px; line-height: 1.6; }
+  .lab li strong { color: var(--text); }
+  .lab .hint {
+    margin-top: 16px;
+    background: rgba(79,195,247,0.06);
+    border: 1px solid rgba(79,195,247,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent2);
+  }
+  .lab .hint strong { color: var(--accent2); }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 18px;
+  }
+  .quiz-q {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .quiz-opts { display: flex; flex-direction: column; gap: 9px; }
+  .quiz-opt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #c5c8d6;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--accent2); color: var(--text); }
+  .quiz-opt.correct { background: rgba(129,199,132,0.12); border-color: var(--accent3); color: var(--accent3); }
+  .quiz-opt.wrong { background: rgba(229,115,115,0.12); border-color: var(--accent4); color: var(--accent4); }
+  .quiz-feedback { font-size: 13px; margin-top: 12px; padding: 10px 14px; border-radius: 8px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(129,199,132,0.1); color: var(--accent3); }
+  .quiz-feedback.no { background: rgba(229,115,115,0.1); color: var(--accent4); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .callout.info { background: rgba(79,195,247,0.07); border: 1px solid rgba(79,195,247,0.25); color: #b3dff0; }
+  .callout.warn { background: rgba(245,166,35,0.07); border: 1px solid rgba(245,166,35,0.25); color: #f0d89a; }
+  .callout .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap { margin: 28px 0 10px; }
+  .progress-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+  .progress-bar { background: var(--surface2); border-radius: 20px; height: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent2)); border-radius: 20px; transition: width 0.6s ease; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .lang-strip { grid-template-columns: 1fr 1fr; }
+    header { padding: 32px 20px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">CAPE Computer Science · Unit 1</div>
+  <h1>Programming <span>Languages</span></h1>
+  <p>Topics 12 & 13 · Self-paced lesson with guided labs and a quick check</p>
+</header>
+
+<nav class="nav-pills">
+  <a href="#topic12">Topic 12</a>
+  <a href="#topic13">Topic 13</a>
+  <a href="#labs">Guided Labs</a>
+  <a href="#check">Quick Check</a>
+</nav>
+
+<main>
+
+  <!-- ══ TOPIC 12 ══ -->
+  <div class="section-head" id="topic12">
+    <span class="section-num">TOPIC 12</span>
+    <h2>Why Different Programming Languages?</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="callout info">
+    <span class="icon">💡</span>
+    <span>Just like no single tool builds an entire house, no single programming language is best for every problem. This topic explores <strong>why different languages exist</strong> and which kinds of problems they are best suited for.</span>
+  </div>
+
+  <div class="card">
+    <h3>The Core Idea</h3>
+    <p>Programming languages are designed with specific goals in mind — speed, readability, portability, safety, or ease of learning. The <em>appropriateness of a language to an application</em> is the key question every developer must ask before starting a project.</p>
+  </div>
+
+  <div class="card">
+    <h3>Application Areas & Their Best-Fit Languages</h3>
+    <ul>
+      <li><strong>Web Applications</strong> — JavaScript is the backbone of the front-end; Python (Django/Flask), PHP, Ruby, and Java are common back-end choices. HTML/CSS structure and style content.</li>
+      <li><strong>Games</strong> — C++ dominates AAA game development (Unreal Engine) for raw speed. C# powers Unity. Performance and memory control are critical.</li>
+      <li><strong>Formula Translation / Scientific Computing</strong> — Fortran (the original "Formula Translation") and Python (NumPy, SciPy) excel at heavy mathematics. MATLAB is also used in academia.</li>
+      <li><strong>Mobile Applications</strong> — Swift and Objective-C for iOS; Kotlin and Java for Android. Cross-platform tools like Flutter (Dart) or React Native (JavaScript) let one codebase run on both.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Why Can't One Language Do Everything?</h3>
+    <ul>
+      <li><strong>Performance vs. Ease of Use</strong> — C/C++ run very fast but are harder to write safely. Python is easy but slower.</li>
+      <li><strong>Platform Requirements</strong> — Mobile OSes have preferred or required languages.</li>
+      <li><strong>Domain-Specific Features</strong> — SQL exists purely for database queries. HTML is for document structure.</li>
+      <li><strong>Community & Libraries</strong> — A language with great libraries for a task (e.g., Python for ML) is often the practical choice even if another language could do it.</li>
+    </ul>
+  </div>
+
+  <div class="lang-strip">
+    <div class="lang-badge">
+      <div class="dot" style="background: var(--c-c)"></div>
+      <div class="name" style="color:var(--c-c)">C</div>
+      <div class="desc">Systems, embedded, OS kernels</div>
+    </div>
+    <div class="lang-badge">
+      <div class="dot" style="background: var(--c-cpp)"></div>
+      <div class="name" style="color:var(--c-cpp)">C++</div>
+      <div class="desc">Games, real-time, performance</div>
+    </div>
+    <div class="lang-badge">
+      <div class="dot" style="background: var(--c-java)"></div>
+      <div class="name" style="color:var(--c-java)">Java</div>
+      <div class="desc">Android, enterprise, cross-platform</div>
+    </div>
+    <div class="lang-badge">
+      <div class="dot" style="background: var(--c-js)"></div>
+      <div class="name" style="color:var(--c-js)">JavaScript</div>
+      <div class="desc">Web front-end & back-end (Node)</div>
+    </div>
+    <div class="lang-badge">
+      <div class="dot" style="background: var(--c-py)"></div>
+      <div class="name" style="color:var(--c-py)">Python</div>
+      <div class="desc">AI/ML, scripting, education</div>
+    </div>
+  </div>
+
+
+  <!-- ══ TOPIC 13 ══ -->
+  <div class="section-head" id="topic13">
+    <span class="section-num">TOPIC 13</span>
+    <h2>Comparing Concepts Across Languages</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="callout warn">
+    <span class="icon">🎯</span>
+    <span>Focus on <strong>variable declarations</strong> and <strong>control structures</strong> across C, C++, Java, JavaScript, and Python. The concepts are the same — the syntax is what changes.</span>
+  </div>
+
+  <!-- VARIABLE DECLARATIONS -->
+  <div class="card">
+    <h3>Variable Declarations</h3>
+    <p style="margin-bottom:14px">A variable declaration tells the computer to reserve memory and give it a name. Languages differ in how strictly you must specify the <em>data type</em>.</p>
+  </div>
+
+  <div class="compare-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Concept</th>
+          <th style="color:var(--c-c)">C</th>
+          <th style="color:var(--c-cpp)">C++</th>
+          <th style="color:var(--c-java)">Java</th>
+          <th style="color:var(--c-js)">JavaScript</th>
+          <th style="color:var(--c-py)">Python</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Typed?</td>
+          <td>Static (explicit)</td>
+          <td>Static (explicit)</td>
+          <td>Static (explicit)</td>
+          <td>Dynamic</td>
+          <td>Dynamic</td>
+        </tr>
+        <tr>
+          <td>Integer</td>
+          <td><code>int x = 5;</code></td>
+          <td><code>int x = 5;</code></td>
+          <td><code>int x = 5;</code></td>
+          <td><code>let x = 5;</code></td>
+          <td><code>x = 5</code></td>
+        </tr>
+        <tr>
+          <td>Float</td>
+          <td><code>float f = 3.14;</code></td>
+          <td><code>float f = 3.14;</code></td>
+          <td><code>double f = 3.14;</code></td>
+          <td><code>let f = 3.14;</code></td>
+          <td><code>f = 3.14</code></td>
+        </tr>
+        <tr>
+          <td>String</td>
+          <td><code>char s[] = "hi";</code></td>
+          <td><code>string s = "hi";</code></td>
+          <td><code>String s = "hi";</code></td>
+          <td><code>let s = "hi";</code></td>
+          <td><code>s = "hi"</code></td>
+        </tr>
+        <tr>
+          <td>Constant</td>
+          <td><code>const int N = 10;</code></td>
+          <td><code>const int N = 10;</code></td>
+          <td><code>final int N = 10;</code></td>
+          <td><code>const N = 10;</code></td>
+          <td><code>N = 10 # convention</code></td>
+        </tr>
+        <tr>
+          <td>Semi-colon?</td>
+          <td>✔ Required</td>
+          <td>✔ Required</td>
+          <td>✔ Required</td>
+          <td>✔ Required</td>
+          <td>✘ Not used</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- IF/ELSE TABS -->
+  <div class="card" style="margin-bottom:0; border-bottom:none; border-radius:12px 12px 0 0;">
+    <h3>Control Structure: If / Else</h3>
+    <p>Click a language tab to see the syntax.</p>
+  </div>
+  <div class="code-tabs" id="if-tabs">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('if','c',this)">C</button>
+      <button class="tab-btn" onclick="switchTab('if','cpp',this)">C++</button>
+      <button class="tab-btn" onclick="switchTab('if','java',this)">Java</button>
+      <button class="tab-btn" onclick="switchTab('if','js',this)">JavaScript</button>
+      <button class="tab-btn" onclick="switchTab('if','py',this)">Python</button>
+    </div>
+    <div class="code-panel active" id="if-c">
+<pre><span class="cm">// C – if / else</span>
+<span class="ty">int</span> score = <span class="nu">75</span>;
+<span class="kw">if</span> (score >= <span class="nu">50</span>) {
+    printf(<span class="st">"Pass\n"</span>);
+} <span class="kw">else</span> {
+    printf(<span class="st">"Fail\n"</span>);
+}</pre>
+    </div>
+    <div class="code-panel" id="if-cpp">
+<pre><span class="cm">// C++ – if / else</span>
+<span class="ty">int</span> score = <span class="nu">75</span>;
+<span class="kw">if</span> (score >= <span class="nu">50</span>) {
+    cout &lt;&lt; <span class="st">"Pass"</span> &lt;&lt; endl;
+} <span class="kw">else</span> {
+    cout &lt;&lt; <span class="st">"Fail"</span> &lt;&lt; endl;
+}</pre>
+    </div>
+    <div class="code-panel" id="if-java">
+<pre><span class="cm">// Java – if / else</span>
+<span class="ty">int</span> score = <span class="nu">75</span>;
+<span class="kw">if</span> (score >= <span class="nu">50</span>) {
+    System.out.println(<span class="st">"Pass"</span>);
+} <span class="kw">else</span> {
+    System.out.println(<span class="st">"Fail"</span>);
+}</pre>
+    </div>
+    <div class="code-panel" id="if-js">
+<pre><span class="cm">// JavaScript – if / else</span>
+<span class="kw">let</span> score = <span class="nu">75</span>;
+<span class="kw">if</span> (score >= <span class="nu">50</span>) {
+    console.log(<span class="st">"Pass"</span>);
+} <span class="kw">else</span> {
+    console.log(<span class="st">"Fail"</span>);
+}</pre>
+    </div>
+    <div class="code-panel" id="if-py">
+<pre><span class="cm"># Python – if / else  (no curly braces – indentation matters!)</span>
+score = <span class="nu">75</span>
+<span class="kw">if</span> score >= <span class="nu">50</span>:
+    print(<span class="st">"Pass"</span>)
+<span class="kw">else</span>:
+    print(<span class="st">"Fail"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- FOR LOOP TABS -->
+  <div class="card" style="margin: 28px 0 0; border-bottom:none; border-radius:12px 12px 0 0;">
+    <h3>Control Structure: For Loop</h3>
+    <p>Counting from 1 to 5.</p>
+  </div>
+  <div class="code-tabs" id="for-tabs">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('for','c',this)">C</button>
+      <button class="tab-btn" onclick="switchTab('for','cpp',this)">C++</button>
+      <button class="tab-btn" onclick="switchTab('for','java',this)">Java</button>
+      <button class="tab-btn" onclick="switchTab('for','js',this)">JavaScript</button>
+      <button class="tab-btn" onclick="switchTab('for','py',this)">Python</button>
+    </div>
+    <div class="code-panel active" id="for-c">
+<pre><span class="cm">// C</span>
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nu">1</span>; i &lt;= <span class="nu">5</span>; i++) {
+    printf(<span class="st">"%d\n"</span>, i);
+}</pre>
+    </div>
+    <div class="code-panel" id="for-cpp">
+<pre><span class="cm">// C++</span>
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nu">1</span>; i &lt;= <span class="nu">5</span>; i++) {
+    cout &lt;&lt; i &lt;&lt; endl;
+}</pre>
+    </div>
+    <div class="code-panel" id="for-java">
+<pre><span class="cm">// Java</span>
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nu">1</span>; i &lt;= <span class="nu">5</span>; i++) {
+    System.out.println(i);
+}</pre>
+    </div>
+    <div class="code-panel" id="for-js">
+<pre><span class="cm">// JavaScript</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="nu">1</span>; i &lt;= <span class="nu">5</span>; i++) {
+    console.log(i);
+}</pre>
+    </div>
+    <div class="code-panel" id="for-py">
+<pre><span class="cm"># Python  (range end is exclusive, so range(1,6) gives 1–5)</span>
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="nu">1</span>, <span class="nu">6</span>):
+    print(i)</pre>
+    </div>
+  </div>
+
+  <!-- WHILE LOOP TABS -->
+  <div class="card" style="margin: 28px 0 0; border-bottom:none; border-radius:12px 12px 0 0;">
+    <h3>Control Structure: While Loop</h3>
+    <p>Keep looping while a condition is true.</p>
+  </div>
+  <div class="code-tabs" id="wh-tabs">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('wh','c',this)">C</button>
+      <button class="tab-btn" onclick="switchTab('wh','cpp',this)">C++</button>
+      <button class="tab-btn" onclick="switchTab('wh','java',this)">Java</button>
+      <button class="tab-btn" onclick="switchTab('wh','js',this)">JavaScript</button>
+      <button class="tab-btn" onclick="switchTab('wh','py',this)">Python</button>
+    </div>
+    <div class="code-panel active" id="wh-c">
+<pre><span class="cm">// C</span>
+<span class="ty">int</span> count = <span class="nu">1</span>;
+<span class="kw">while</span> (count &lt;= <span class="nu">3</span>) {
+    printf(<span class="st">"count = %d\n"</span>, count);
+    count++;
+}</pre>
+    </div>
+    <div class="code-panel" id="wh-cpp">
+<pre><span class="cm">// C++</span>
+<span class="ty">int</span> count = <span class="nu">1</span>;
+<span class="kw">while</span> (count &lt;= <span class="nu">3</span>) {
+    cout &lt;&lt; <span class="st">"count = "</span> &lt;&lt; count &lt;&lt; endl;
+    count++;
+}</pre>
+    </div>
+    <div class="code-panel" id="wh-java">
+<pre><span class="cm">// Java</span>
+<span class="ty">int</span> count = <span class="nu">1</span>;
+<span class="kw">while</span> (count &lt;= <span class="nu">3</span>) {
+    System.out.println(<span class="st">"count = "</span> + count);
+    count++;
+}</pre>
+    </div>
+    <div class="code-panel" id="wh-js">
+<pre><span class="cm">// JavaScript</span>
+<span class="kw">let</span> count = <span class="nu">1</span>;
+<span class="kw">while</span> (count &lt;= <span class="nu">3</span>) {
+    console.log(<span class="st">"count = "</span> + count);
+    count++;
+}</pre>
+    </div>
+    <div class="code-panel" id="wh-py">
+<pre><span class="cm"># Python</span>
+count = <span class="nu">1</span>
+<span class="kw">while</span> count &lt;= <span class="nu">3</span>:
+    print(<span class="st">f"count = {count}"</span>)
+    count += <span class="nu">1</span></pre>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <div class="card">
+    <h3>Key Observations</h3>
+    <ul>
+      <li><strong>Python</strong> uses <em>indentation</em> instead of curly braces <code>{ }</code> — get the spacing wrong and the program breaks.</li>
+      <li><strong>C, C++, Java, JavaScript</strong> use curly braces to group blocks of code.</li>
+      <li><strong>C and C++</strong> require strict data types — you must say <code>int</code>, <code>float</code>, <code>char</code> when declaring a variable.</li>
+      <li><strong>JavaScript</strong> uses <code>let</code> / <code>const</code> / <code>var</code>; the type is inferred automatically.</li>
+      <li><strong>Python</strong> needs no keyword at all — just write <code>x = 5</code> and it figures out the type.</li>
+      <li><strong>Java</strong> is the most verbose — every program needs a class, a <code>main</code> method, and explicit types.</li>
+    </ul>
+  </div>
+
+
+  <!-- ══ LABS ══ -->
+  <div class="section-head" id="labs">
+    <span class="section-num">GUIDED LABS</span>
+    <h2>Try It Yourself</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="callout info">
+    <span class="icon">🖥️</span>
+    <span>Use <strong><a href="https://www.onlinegdb.com" target="_blank" style="color:var(--accent2)">OnlineGDB</a></strong> for all labs — select your language from the dropdown at the top right. Each lab has a clear goal — read it, then write the code yourself before checking any answers.</span>
+  </div>
+
+  <div class="lab">
+    <div class="lab-header">
+      <span class="lab-num">LAB 1</span>
+      <h3>Language Scavenger Hunt (No coding needed)</h3>
+    </div>
+    <div class="objective">🎯 Objective: Match real-world applications to programming languages.</div>
+    <ol>
+      <li>Write down <strong>5 apps or websites</strong> you use (e.g., Instagram, a game, Google Maps).</li>
+      <li>Research what language each one was primarily built with. A quick search like <em>"what language is Instagram built in"</em> works fine.</li>
+      <li>For each, write <strong>one reason</strong> why that language makes sense for that application.</li>
+      <li>Compare your list with a classmate — did you find any surprises?</li>
+    </ol>
+    <div class="hint">💬 <strong>Discussion:</strong> Were any languages used for more than one type of application on your list? What does that tell you?</div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-header">
+      <span class="lab-num">LAB 2</span>
+      <h3>Variable Declaration Explorer</h3>
+    </div>
+    <div class="objective">🎯 Objective: Declare and print variables in at least TWO of the five languages.</div>
+    <ol>
+      <li>Go to <a href="https://www.onlinegdb.com" target="_blank" style="color:var(--accent2)">OnlineGDB</a>. Use the language dropdown (top right) to switch between <strong>Python</strong> and <strong>JavaScript</strong>.</li>
+      <li>In <strong>Python</strong>, declare: your name as a string, your age as an integer, and your GPA as a float. Print all three.</li>
+      <li>Repeat the same in <strong>JavaScript</strong> using <code>let</code>. Use <code>console.log()</code> to print.</li>
+      <li>Try the same in <strong>Java</strong> if you have time — you'll need to wrap it in a class and <code>main</code> method.</li>
+      <li>Write down: <em>What's the biggest difference you noticed between Python and the others?</em></li>
+    </ol>
+    <div class="hint">💬 <strong>Tip:</strong> Python doesn't need a data type keyword — just <code>name = "Alex"</code>. JavaScript needs <code>let name = "Alex";</code>. Java needs <code>String name = "Alex";</code>.</div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-header">
+      <span class="lab-num">LAB 3</span>
+      <h3>Grade Checker — 3 Ways</h3>
+    </div>
+    <div class="objective">🎯 Objective: Write the same if/else logic in Python, JavaScript, and Java.</div>
+    <ol>
+      <li>The logic: A student's mark is 68. If it's ≥ 70, print "Distinction". If it's ≥ 50, print "Pass". Otherwise, print "Fail".</li>
+      <li>Write this in <strong>Python</strong> using <code>if / elif / else</code>.</li>
+      <li>Write it in <strong>JavaScript</strong> — same logic, but with curly braces and semicolons.</li>
+      <li>Optional challenge: Write it in <strong>Java</strong> — you'll need the full class wrapper.</li>
+      <li>Run each version and confirm they all print <strong>"Pass"</strong>.</li>
+    </ol>
+    <div class="hint">💬 <strong>Python tip:</strong> Python uses <code>elif</code> (not <code>else if</code>). JS and Java use <code>else if</code>.</div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-header">
+      <span class="lab-num">LAB 4</span>
+      <h3>Times Table Generator</h3>
+    </div>
+    <div class="objective">🎯 Objective: Use a for loop to generate a times table in Python and one other language.</div>
+    <ol>
+      <li>Write a <strong>Python</strong> program that asks the user for a number, then prints its times table from 1 to 12. Use <code>input()</code> to get the number and a <code>for</code> loop to print each line. Example output: <code>5 x 3 = 15</code></li>
+      <li>Now write the same in <strong>JavaScript</strong> using a <code>for</code> loop. You can hardcode the number since JS in the browser console doesn't have easy <code>input()</code>.</li>
+      <li>Identify: which line of code is the most different between the two versions?</li>
+    </ol>
+    <div class="hint">💬 <strong>Python f-string hint:</strong> <code>print(f"{n} x {i} = {n*i}")</code></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-header">
+      <span class="lab-num">LAB 5 · CHALLENGE</span>
+      <h3>Language Comparison Report</h3>
+    </div>
+    <div class="objective">🎯 Objective: Synthesise everything from Topics 12 & 13 into a short written or presented comparison.</div>
+    <ol>
+      <li>Choose <strong>two languages</strong> from the five studied.</li>
+      <li>Write a short comparison (1 page or 10 slides) that covers: who uses it and why, variable declaration syntax, at least one control structure difference, and one application area it is best suited for.</li>
+      <li>Include a code snippet for each language showing the same task done two different ways.</li>
+      <li>End with your own recommendation: <em>If you were building a mobile quiz game, which language would you choose and why?</em></li>
+    </ol>
+    <div class="hint">💬 There is no single correct answer for the recommendation — your reasoning matters more than the choice.</div>
+  </div>
+
+
+  <!-- ══ QUICK CHECK ══ -->
+  <div class="section-head" id="check">
+    <span class="section-num">QUICK CHECK</span>
+    <h2>Test Your Understanding</h2>
+    <div class="divider"></div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="quiz-card">
+    <div class="quiz-q">1. Which language is most commonly used for web front-end development?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q1')">A. Java</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q1')">B. JavaScript</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q1')">C. C++</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q1')">D. Python</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card">
+    <div class="quiz-q">2. Which of the following is TRUE about Python variable declarations?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q2')">A. You must declare the type before the variable name</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q2')">B. You must use the keyword <code>let</code></button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q2')">C. No keyword or type is needed — just assign a value</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q2')">D. You must end every declaration with a semicolon</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card">
+    <div class="quiz-q">3. C++ is preferred over Python for game development mainly because of its:</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q3')">A. Easier syntax</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q3')">B. Superior execution speed and memory control</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q3')">C. Better support for web APIs</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q3')">D. Built-in game engine</button>
+    </div>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card">
+    <div class="quiz-q">4. In Python, what replaces curly braces <code>{ }</code> to define a block of code?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q4')">A. Parentheses <code>( )</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q4')">B. Square brackets <code>[ ]</code></button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q4')">C. Consistent indentation</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q4')">D. The keyword <code>begin</code> and <code>end</code></button>
+    </div>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card">
+    <div class="quiz-q">5. Which keyword does Java use to declare a constant variable?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q5')">A. <code>const</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q5')">B. <code>static</code></button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q5')">C. <code>final</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q5')">D. <code>fixed</code></button>
+    </div>
+    <div class="quiz-feedback" id="q5-fb"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card">
+    <div class="quiz-q">6. A student writes this Python for loop: <code>for i in range(1, 5):</code> — how many times will it iterate?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q6')">A. 5 times (1, 2, 3, 4, 5)</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q6')">B. 4 times (1, 2, 3, 4)</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q6')">C. 6 times</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q6')">D. It depends on the system</button>
+    </div>
+    <div class="quiz-feedback" id="q6-fb"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card">
+    <div class="quiz-q">7. Which of the following correctly declares a string variable in C?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q7')">A. <code>string name = "Alex";</code></button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q7')">B. <code>char name[] = "Alex";</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q7')">C. <code>let name = "Alex";</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q7')">D. <code>String name = "Alex";</code></button>
+    </div>
+    <div class="quiz-feedback" id="q7-fb"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card">
+    <div class="quiz-q">8. What is the correct Python keyword for a conditional branch that follows an <code>if</code>, when there are multiple conditions to check?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q8')">A. <code>else if</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q8')">B. <code>elseif</code></button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q8')">C. <code>elif</code></button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q8')">D. <code>or if</code></button>
+    </div>
+    <div class="quiz-feedback" id="q8-fb"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card">
+    <div class="quiz-q">9. A developer wants to build a data science application that analyses large datasets and visualises results. Which language is the most appropriate choice?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q9')">A. C</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q9')">B. JavaScript</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q9')">C. Python</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q9')">D. Java</button>
+    </div>
+    <div class="quiz-feedback" id="q9-fb"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card">
+    <div class="quiz-q">10. Which statement about statically typed languages (like C, C++, and Java) is TRUE?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'correct','q10')">A. The data type of a variable must be declared before it is used</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q10')">B. The data type is automatically determined at runtime</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q10')">C. Variables can change their type freely during execution</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q10')">D. No variable declarations are needed</button>
+    </div>
+    <div class="quiz-feedback" id="q10-fb"></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="quiz-card">
+    <div class="quiz-q">11. Look at this code snippet:<br><br><code style="background:#0a0c12;padding:10px 14px;display:block;border-radius:8px;margin-top:8px;line-height:1.8">int x = 1;<br>while (x &lt;= 4) {<br>&nbsp;&nbsp;&nbsp;&nbsp;x++;<br>}</code><br>How many times does the loop body execute?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q11')">A. 3</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q11')">B. 4</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q11')">C. 5</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q11')">D. Infinite — it never stops</button>
+    </div>
+    <div class="quiz-feedback" id="q11-fb"></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="quiz-card">
+    <div class="quiz-q">12. Which of the following languages does NOT require a semicolon at the end of a statement?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q12')">A. Java</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q12')">B. C++</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q12')">C. Python</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q12')">D. JavaScript</button>
+    </div>
+    <div class="quiz-feedback" id="q12-fb"></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="quiz-card">
+    <div class="quiz-q">13. A company is building an app for both Android and iOS using a single codebase. Which of the following approaches best supports this?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q13')">A. Writing separate apps in Swift and Kotlin</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q13')">B. Using C++ only</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q13')">C. Using a cross-platform framework like Flutter (Dart) or React Native (JavaScript)</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q13')">D. Using Python since it runs everywhere</button>
+    </div>
+    <div class="quiz-feedback" id="q13-fb"></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="quiz-card">
+    <div class="quiz-q">14. What does the <code>++</code> operator do in C, C++, Java, and JavaScript?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q14')">A. Multiplies the variable by 2</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q14')">B. Increases the variable's value by 1</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q14')">C. Concatenates two strings</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q14')">D. Declares a positive integer</button>
+    </div>
+    <div class="quiz-feedback" id="q14-fb"></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="quiz-card">
+    <div class="quiz-q">15. Which of the following best describes why programming languages exist in different levels of abstraction (low-level vs high-level)?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong','q15')">A. High-level languages are always faster than low-level languages</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q15')">B. Low-level languages are easier to read and write</button>
+      <button class="quiz-opt" onclick="answer(this,'correct','q15')">C. Different tasks require different trade-offs between ease of use and control over hardware</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong','q15')">D. All modern programs are written in low-level languages for speed</button>
+    </div>
+    <div class="quiz-feedback" id="q15-fb"></div>
+  </div>
+
+  <div class="progress-bar-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-label">Your score: <span id="score-txt">0 / 15</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="score-bar" style="width:0%"></div></div>
+    <div id="score-remark" style="font-size:13px;color:var(--muted);margin-top:8px;font-style:italic;"></div>
+  </div>
+
+</main>
+
+<footer>
+  CAPE Computer Science · Unit 1 &nbsp;|&nbsp; Topics 12 &amp; 13 &nbsp;|&nbsp; Self-paced lesson guide
+</footer>
+
+<script>
+  // ── TAB SWITCHER ──
+  function switchTab(group, lang, btn) {
+    document.querySelectorAll('#' + group + '-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#' + group + '-tabs .code-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(group + '-' + lang).classList.add('active');
+  }
+
+  // ── QUIZ ──
+  const answers = { q1:'B', q2:'C', q3:'B', q4:'C', q5:'C', q6:'B', q7:'B', q8:'C', q9:'C', q10:'A', q11:'B', q12:'C', q13:'C', q14:'B', q15:'C' };
+  const explanations = {
+    q1: 'JavaScript runs natively in every browser, making it the universal choice for web front-end.',
+    q2: 'Python uses dynamic typing — you simply write <code>x = 5</code> and Python infers the type.',
+    q3: 'C++ gives developers direct control over memory and compiles to fast machine code — critical for real-time games.',
+    q4: 'Python uses indentation (whitespace) to define blocks. Incorrect indentation causes errors.',
+    q5: 'Java uses the <code>final</code> keyword to prevent a variable from being reassigned.',
+    q6: '<code>range(1, 5)</code> produces 1, 2, 3, 4 — the end value is <em>exclusive</em> in Python.',
+    q7: 'C has no built-in string type. Strings are stored as character arrays: <code>char name[] = "Alex";</code>',
+    q8: 'Python uses <code>elif</code> (short for "else if") — not <code>else if</code> as in C, C++, Java, and JavaScript.',
+    q9: 'Python has a rich ecosystem of data science libraries (NumPy, pandas, Matplotlib, scikit-learn) that make it the dominant choice for this domain.',
+    q10: 'In statically typed languages, the programmer must declare the type (e.g., <code>int</code>, <code>double</code>) before using a variable. The compiler checks types at compile time.',
+    q11: 'x starts at 1 and increments each loop: 1→2→3→4→5. The condition fails when x becomes 5 (5 ≤ 4 is false), so the body runs 4 times.',
+    q12: 'Python ends statements with a newline — no semicolons needed. C, C++, Java, and JavaScript all require them.',
+    q13: 'Cross-platform frameworks like Flutter (Dart) or React Native (JavaScript) let one codebase compile and run on both iOS and Android.',
+    q14: '<code>++</code> is the increment operator — it adds 1 to the variable. Python uses <code>+= 1</code> instead since it does not have <code>++</code>.',
+    q15: 'Low-level languages offer fine-grained hardware control (speed, memory) but are harder to write. High-level languages trade some performance for readability and productivity. Choosing the right level depends on the task.'
+  };
+
+  let answered = {};
+  function answer(btn, result, qid) {
+    if (answered[qid] !== undefined) return;
+    answered[qid] = result === 'correct';
+    const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+    btn.classList.add(result);
+    const fb = document.getElementById(qid + '-fb');
+    fb.innerHTML = (result === 'correct' ? '✅ ' : '❌ ') + explanations[qid];
+    fb.className = 'quiz-feedback show ' + (result === 'correct' ? 'ok' : 'no');
+    updateScore();
+  }
+
+  function updateScore() {
+    const total = Object.keys(answers).length;
+    const correct = Object.values(answered).filter(Boolean).length;
+    const done = Object.keys(answered).length;
+    const wrap = document.getElementById('progress-wrap');
+    wrap.style.display = 'block';
+    document.getElementById('score-txt').textContent = correct + ' / ' + total + (done < total ? ' so far' : '');
+    document.getElementById('score-bar').style.width = (correct / total * 100) + '%';
+    if (done === total) {
+      const pct = correct / total;
+      const remark = pct === 1 ? '🏆 Perfect score! Outstanding work.' :
+                     pct >= 0.8 ? '🎉 Excellent — solid understanding across both topics.' :
+                     pct >= 0.6 ? '👍 Good effort — review the questions you missed and try again.' :
+                     '📖 Keep studying — go back through the lesson and retry the labs.';
+      document.getElementById('score-remark').textContent = remark;
+    }
+  }
+</script>
+</body>
+</html>
